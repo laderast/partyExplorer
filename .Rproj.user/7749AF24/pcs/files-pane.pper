@@ -1,0 +1,9 @@
+{
+    "path" : "~/Code/partyExplorer",
+    "sortOrder" : [
+        {
+            "ascending" : true,
+            "columnIndex" : 2
+        }
+    ]
+}

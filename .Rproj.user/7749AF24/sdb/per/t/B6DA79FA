@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(shiny)\nlibrary(ggplot2)\nlibrary(dplyr)\nlibrary(party)\nlibrary(data.table)\n\n###Put Data processing steps here\n###This is a test using the iris dataset\n###You can load any data here, just name it \"dataset\"\n\n dataset <- iris\n outcomeVar <- \"Species\"\n dataset <- dataset %>% mutate(sepalRatio=Sepal.Length/Sepal.Width, petalRatio = Petal.Length/Petal.Width)\n\nsource(\"debounce.R\")\n\n# dataset <- fread(\"../night1EDA/testData.csv\", stringsAsFactors = TRUE)\n# #dataset <- dataset[sample(1:nrow(dataset), 50000),]\n# dataset$cvd <- factor(dataset$cvd)\n# outcomeVar <- \"cvd\"\n# dataset2 <- dataset %>% mutate(bmiCat=cut(bmi, breaks = c(15,17,20,25,31)))\n\n\n##Build test and train sets of data\ntrainIndex <- sample(nrow(dataset), size = floor(0.75 * nrow(dataset)))\ntrainDataset <- dataset[trainIndex,]\ntestDataset <- dataset[-trainIndex,]\n\n##Find covariate names\ncovariateNames <- colnames(dataset)[!colnames(dataset) %in% outcomeVar]\n\n##Don't modify anything below here, or app won't work properly.\n#get the variable types\nvarClass <- sapply(dataset, class)\n\n#separate the variables into each type\ncategoricalVars <- names(varClass[varClass == \"factor\"])\nnumericVars <- names(varClass[varClass %in% c(\"numeric\", \"integer\")])\n\n",
+    "created" : 1494954943596.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "3494696507",
+    "id" : "B6DA79FA",
+    "lastKnownWriteTime" : 1494954970,
+    "last_content_update" : 1494954970048,
+    "path" : "~/Code/partyExplorer/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

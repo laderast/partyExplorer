@@ -1,0 +1,22 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533163029892.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "D0E3B6F9",
+    "lastKnownWriteTime" : 1533163052,
+    "last_content_update" : 1533163052401,
+    "path" : "~/Code/partyExplorer/server.R",
+    "project_path" : "server.R",
+    "properties" : {
+        "cursorPosition" : "7,25",
+        "scrollLine" : "0"
+    },
+    "relative_order" : 4,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
