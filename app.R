@@ -4,13 +4,17 @@ library(dplyr)
 library(party)
 library(data.table)
 library(here)
+library(palmerpenguins)
+library(rintrojs)
 
 ###Put Data processing steps here
 ###This is a test using the iris dataset
 ###You can load any data here, just name it "dataset"
 
-dataset <- iris
- outcomeVar <- "Species"
+data(penguins)
+
+dataset <- penguins
+ outcomeVar <- "species"
  #dataset <- dataset %>% mutate(sepalRatio=Sepal.Length/Sepal.Width, petalRatio = Petal.Length/Petal.Width)
  
 source("debounce.R")
@@ -35,28 +39,58 @@ numericVars <- names(varClass[varClass %in% c("numeric", "integer")])
 ui <- navbarPage(
   
   # Application title
-  "Tree Analysis",
-  
+  "Palmer Penguins",
   # Sidebar with a slider input for number of bins
   tabPanel("Tree Explorer",
+           rintrojs::introjsUI(),
+           actionButton("help", "Help", icon = icon("circle-question")),
+           introBox(
            selectInput("covariates", "Click Box to Add Covariates", 
                        choices = covariateNames, multiple=TRUE),
+           data.step = 1,
+           data.intro = "<p>Welcome to the Palmer Penguin dataset. We're going to try to predict the
+           Species of Penguin (Adelie, Chinstrap, Gentoo) using a conditional inference decision tree using the {party} package.
+           Click the selector box to start adding a feature to the model."
+            ),
            fluidRow(
+            introBox( 
              column(width=9,plotOutput("cartTree", click="mouse_click")),
-             column(width=3, tableOutput("confusionMatrix"))
+             
+             data.step = 2,
+             data.intro = "This is the resulting decision tree. 
+             The decision tree shows the different classes that we are trying to predict (penguin species),
+             and you can see the decision cutoff that separates each branch. At the bottom are the different bins defined by each decision cutoff."
+             ),
+             column(width=3, introBox(tableOutput("confusionMatrix"), data.step = 3,
+                    data.intro = "This is the confusion matrix. You can see how the tree predicts versus the truth."))
+             
+            
            ),
-           uiOutput("groupUI"),
-           verbatimTextOutput("groupSummary")#,
+           fluidRow(
+             column(
+           introBox(
+           img(src="penguins.jpg", alt="Penguin Squad from Shirokuma Cafe", width = 400),
+           data.step=4, data.intro = "This is a drawing of Adelie, Gentoo, and Chinstrap Penguins from one of my favorite anime, <a href='https://www.crunchyroll.com/polar-bear-cafe'>Shirokuma Cafe.</a>"
+           ), width=6),
+           column(
+           introBox(
+           img(src="penguinsan.gif", alt = "Penguin-san from Shirokuma Cafe freaking out about driving", width=400),
+           data.step=5, data.intro = "This is a gif from Shirokuma Cafe."), width= 6
+           ))
+           #uiOutput("groupUI"),
+           #verbatimTextOutput("groupSummary")#,
            #verbatimTextOutput("cartNode")
   ),
   tabPanel("Compare Nodes",
+           introBox(
            selectInput("compareVar", "Select Covariate to Compare", 
-                       choices=numericVars),
+                       choices=numericVars)),
            plotOutput("compareViolin")
   ),
   
   tabPanel("Test Group Accuracy",
-           verbatimTextOutput("testResponse")
+           introBox(
+           verbatimTextOutput("testResponse"))
   )
   
   
@@ -66,7 +100,7 @@ ui <- navbarPage(
 
 
 
-server <- function(input, output) {
+server <- shinyServer(function(input, output, session) {
   
   #trainData is a "reactive" dataset - you can add live filtering criteria here
   #to use this reactive, notice you have to use trainData() rather than just trainData
@@ -199,6 +233,12 @@ server <- function(input, output) {
     
   })
   
-}
+  observeEvent(input$help,
+               introjs(session, options = list("nextLabel"="Next",
+                                               "prevLabel"="Previous",
+                                               "skipLabel"="Done"))
+  )
+  
+})
 
 shinyApp(ui = ui, server = server)
